@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QSettings>
+#include "scriptconsolewidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     mdiArea_->setObjectName("mdiArea");
     setCentralWidget(mdiArea_);
 
-//    scriptEngine_ = new ScriptEngine(this);
-//    scriptEngine_->installExtensions(QJSEngine::ConsoleExtension);
+    scriptEngine_ = new ScriptEngine(this);
+    scriptEngine_->installExtensions(QJSEngine::ConsoleExtension);
 //    projectFile_ = new ProjectFile(this);
 //    projectFile_->setObjectName("projectFile");
 //    scriptEngine_->makeQObjectScriptable(projectFile_, projectFile_->objectName());
@@ -130,6 +131,16 @@ MainWindow::MainWindow(QWidget *parent)
     statusBar_ = new QStatusBar(this);
     statusBar_->setObjectName("statusBar");
     setStatusBar(statusBar_);
+
+    //---скриптовая консоль-----------------------------------------------------
+
+    consoleWidget_ = new QDockWidget(this);
+    consoleWidget_->setObjectName("consoleWidget");
+    consoleWidget_->setWidget(new ScriptConsoleWidget(scriptEngine_, this));
+    consoleWidget_->setWindowTitle("Консоль JavaScript");
+    addDockWidget(Qt::LeftDockWidgetArea, consoleWidget_, Qt::Vertical);
+    viewMenu_->addAction(consoleWidget_->toggleViewAction());
+    scriptEngine_->makeQObjectScriptable(consoleWidget_, consoleWidget_->objectName());
 
     //--------------------------------------------------------------------------
 

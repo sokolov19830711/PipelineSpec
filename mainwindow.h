@@ -10,6 +10,9 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QToolBar>
+#include "scriptengine.h"
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -26,7 +29,7 @@ protected:
 
 private:
 
-//    ScriptEngine* scriptEngine_;
+    ScriptEngine* scriptEngine_;
     QDockWidget* consoleWidget_;
 
     QDockWidget* generalProjectDataWidgetDock_;
