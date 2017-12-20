@@ -1,0 +1,59 @@
+{
+    "type": "Project",
+    "properties": {
+        "CPE": "<не задано>",
+        "T_min_air": "-10",
+        "check": "<не задано>",
+        "ctrl": "<не задано>",
+        "customer": "<не задано>",
+        "date": "<не задано>",
+        "developer": "Соколов",
+        "fullName": "Прооект1",
+        "head": "<не задано>",
+        "insulationMark": "<не задано>",
+        "mountMark": "<не задано>",
+        "projID": "321654",
+        "stage": "П"
+    },
+    "projectFileName": "D:/Prog/PipelineSpec_0.2/build-PipelineSpec-Desktop_Qt_5_7_0_MinGW_32bit-Debug/projects/тест.psp",
+    "sectionList": [
+        {
+            "type": "Section",
+            "properties": {
+                "M_ger": "-",
+                "M_plo": "-",
+                "M_pro": "-",
+                "P_ger": 0,
+                "P_plo": 0,
+                "P_pro": 0,
+                "P_rab": "10,0",
+                "P_rab_text": "",
+                "P_ras": 0,
+                "P_usl": 0,
+                "T1": 0,
+                "T2": "1",
+                "T_max": 0,
+                "category": "",
+                "corr": 0,
+                "dP": "0,003",
+                "from": "",
+                "group": "",
+                "insul_type": "-",
+                "isFlare": true,
+                "isHeated": false,
+                "isInsulated": false,
+                "isSteam": false,
+                "isTherm": false,
+                "material": "",
+                "product": "",
+                "sectionName": "Спирт",
+                "t": 24,
+                "to": "",
+                "weldCtrl": 0,
+                "workPeriod": 0
+            },
+            "itemList": []
+        }
+    ],
+    "currentSectionIndex": 0
+}

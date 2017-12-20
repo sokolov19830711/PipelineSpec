@@ -1,0 +1,79 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+
+#include <QDockWidget>
+#include <QMdiArea>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QToolBar>
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = 0);
+    ~MainWindow();
+
+public slots:
+
+protected:
+    void closeEvent(QCloseEvent* event);
+
+private:
+
+//    ScriptEngine* scriptEngine_;
+    QDockWidget* consoleWidget_;
+
+    QDockWidget* generalProjectDataWidgetDock_;
+    QDockWidget* sectionParamsWidgetDock_;
+    QDockWidget* itemPropertiesWidgetDock_;
+
+    QAction* generalProjectDataViewAction_;
+    QAction* sectionParamsViewAction_;
+    QAction* itemPropertiesViewAction_;
+
+    QAction *newProjectAction_;
+    QAction *openProjectAction_;
+    QAction *saveProjectAction_;
+    QAction *saveProjectAsAction_;
+    QAction *exitAction_;
+
+    QAction* calcSectionParamsAction_;
+
+    QAction *undoAction_;
+    QAction *redoAction_;
+    QAction *copyAction_;
+    QAction *pasteAction_;
+    QAction *newSectionAction_;
+    QAction *deleteSectionAction_;
+    QAction *deleteItemAction_;
+    QAction *addPosAction_;
+    QAction *deletePosAction_;
+    QAction *exportVTinWord_;
+    QAction *movePosUpAction_;
+    QAction *movePosDownAction_;
+
+    QWidget *centralWidget_;
+    QMdiArea *mdiArea_;
+    QMenuBar *menuBar_;
+
+    QMenu *fileMenu_;
+    QMenu *recentProjectsMenu_;
+    QMenu *editMenu_;
+    QMenu *projectMenu_;
+    QMenu *sectionMenu_;
+    QMenu *addItemMenu_;
+    QMenu *viewMenu_;
+    QMenu *settingsMenu_;
+    QMenu *helpMenu_;
+
+    QToolBar *mainToolBar_;
+    QStatusBar *statusBar_;
+};
+
+#endif // MAINWINDOW_H
