@@ -1,6 +1,11 @@
 #include "mainwindow.h"
 
+#include <QDebug>
+
 #include <QSettings>
+#include <QFile>
+#include <QFileDialog>
+#include <QJsonDocument>
 #include "scriptconsolewidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -144,6 +149,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     //--------------------------------------------------------------------------
 
+    QMetaObject::connectSlotsByName(this);
+
     QSettings settings("settings",  QSettings::IniFormat, this);
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
@@ -160,4 +167,16 @@ void MainWindow::closeEvent(QCloseEvent* event)
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
     QMainWindow::closeEvent(event);
+}
+
+void MainWindow::on_openProjectAction_triggered()
+{
+    QFile file(QFileDialog::getOpenFileName(this, "Открыть проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+//        QTextStream in(&file);
+//        in.setCodec("Utf-8");
+        QJSValue proj = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
+        scriptEngine_->globalObject().setProperty("proj",proj);
+    }
 }

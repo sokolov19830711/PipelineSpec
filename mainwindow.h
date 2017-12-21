@@ -24,11 +24,14 @@ public:
 
 public slots:
 
+    void on_openProjectAction_triggered();
+
 protected:
     void closeEvent(QCloseEvent* event);
 
 private:
 
+    QJSValue project_;
     ScriptEngine* scriptEngine_;
     QDockWidget* consoleWidget_;
 
