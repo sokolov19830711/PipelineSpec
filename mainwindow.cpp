@@ -19,9 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     scriptEngine_ = new ScriptEngine(this);
     scriptEngine_->installExtensions(QJSEngine::ConsoleExtension);
-//    projectFile_ = new ProjectFile(this);
-//    projectFile_->setObjectName("projectFile");
-//    scriptEngine_->makeQObjectScriptable(projectFile_, projectFile_->objectName());
 
     //---Действия-------------------------------------------------------------------------------------------
 
@@ -29,30 +26,25 @@ MainWindow::MainWindow(QWidget *parent)
     newProjectAction_->setObjectName("newProjectAction");
     newProjectAction_->setText("Новый проект");
     newProjectAction_->setIcon(QIcon("data/icons/newProjectIcon.png"));
-//    scriptEngine_->makeQObjectScriptable(newProjectAction_, newProjectAction_->objectName());
 
     openProjectAction_ = new QAction(this);
     openProjectAction_->setObjectName("openProjectAction");
     openProjectAction_->setText("Открыть проект...");
     openProjectAction_->setIcon(QIcon("data/icons/openProjectIcon.png"));
-//    scriptEngine_->makeQObjectScriptable(openProjectAction_, openProjectAction_->objectName());
 
     saveProjectAction_ = new QAction(this);
     saveProjectAction_->setObjectName("saveProjectAction");
     saveProjectAction_->setText("Сохранить");
     saveProjectAction_->setIcon(QIcon("data/icons/saveProjectIcon.png"));
-//    scriptEngine_->makeQObjectScriptable(saveProjectAction_, saveProjectAction_->objectName());
 
     saveProjectAsAction_ = new QAction(this);
     saveProjectAsAction_->setObjectName("saveProjectAsAction");
     saveProjectAsAction_->setText("Сохранить как...");
-//    scriptEngine_->makeQObjectScriptable(saveProjectAsAction_, saveProjectAsAction_->objectName());
 
     newSectionAction_ = new QAction(this);
     newSectionAction_->setObjectName("newSectionAction");
     newSectionAction_->setText("Новый участок");
     newSectionAction_->setIcon(QIcon("data/icons/newSectionIcon.png"));
-//    scriptEngine_->makeQObjectScriptable(newSectionAction_, newSectionAction_->objectName());
 
     exitAction_ = new QAction(this);
     exitAction_->setObjectName("exitAction");
@@ -62,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent)
     calcSectionParamsAction_->setObjectName("calcSectionParamsAction");
     calcSectionParamsAction_->setText("Рассчитать параметры");
     calcSectionParamsAction_->setIcon(QIcon("data/icons/calcSectionParams.png"));
-//    scriptEngine_->makeQObjectScriptable(calcSectionParamsAction_, calcSectionParamsAction_->objectName());
 
     //---Главное меню------------------------------------------------------------------------------------------
 
@@ -174,9 +165,28 @@ void MainWindow::on_openProjectAction_triggered()
     QFile file(QFileDialog::getOpenFileName(this, "Открыть проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-//        QTextStream in(&file);
-//        in.setCodec("Utf-8");
-        QJSValue proj = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
-        scriptEngine_->globalObject().setProperty("proj",proj);
+
+        project_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
+        scriptEngine_->globalObject().setProperty("project", project_);
+        project_.setProperty("projectFileName", file.fileName());
+    }
+}
+
+void MainWindow::on_saveProjectAction_triggered()
+{
+    QFile file(project_.property("projectFileName").toString());
+    if (file.open(QIODevice::WriteOnly))
+    {
+        file.write((QJsonDocument::fromVariant(project_.toVariant())).toJson());
+    }
+}
+
+void MainWindow::on_saveProjectAsAction_triggered()
+{
+    QFile file(QFileDialog::getSaveFileName(this, "Сохранить проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
+    if (file.open(QIODevice::WriteOnly))
+    {
+        project_.setProperty("projectFileName", file.fileName());
+        file.write((QJsonDocument::fromVariant(project_.toVariant())).toJson());
     }
 }
