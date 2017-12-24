@@ -27,6 +27,7 @@ public slots:
     void on_openProjectAction_triggered();
     void on_saveProjectAction_triggered();
     void on_saveProjectAsAction_triggered();
+    void on_newProjectAction_triggered();
 
 protected:
     void closeEvent(QCloseEvent* event);

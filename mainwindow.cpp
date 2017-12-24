@@ -160,6 +160,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
+//---public slots----------------------------------------------------------------------------------------------
+
 void MainWindow::on_openProjectAction_triggered()
 {
     QFile file(QFileDialog::getOpenFileName(this, "Открыть проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
@@ -174,6 +176,12 @@ void MainWindow::on_openProjectAction_triggered()
 
 void MainWindow::on_saveProjectAction_triggered()
 {
+    if (project_.property("projectFileName").toString() == "")
+    {
+        on_saveProjectAsAction_triggered();
+        return;
+    }
+
     QFile file(project_.property("projectFileName").toString());
     if (file.open(QIODevice::WriteOnly))
     {
@@ -188,5 +196,15 @@ void MainWindow::on_saveProjectAsAction_triggered()
     {
         project_.setProperty("projectFileName", file.fileName());
         file.write((QJsonDocument::fromVariant(project_.toVariant())).toJson());
+    }
+}
+
+void MainWindow::on_newProjectAction_triggered()
+{
+    QFile file("data/empty.psp");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        project_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
+        scriptEngine_->globalObject().setProperty("project", project_);
     }
 }
