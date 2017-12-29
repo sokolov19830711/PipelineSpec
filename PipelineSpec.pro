@@ -28,9 +28,11 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     scriptengine.cpp \
-    scriptconsolewidget.cpp
+    scriptconsolewidget.cpp \
+    propertyeditor.cpp
 
 HEADERS += \
         mainwindow.h \
     scriptengine.h \
-    scriptconsolewidget.h
+    scriptconsolewidget.h \
+    propertyeditor.h

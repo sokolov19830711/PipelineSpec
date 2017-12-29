@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QJsonDocument>
 #include "scriptconsolewidget.h"
+#include "propertyeditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -128,6 +129,17 @@ MainWindow::MainWindow(QWidget *parent)
     statusBar_->setObjectName("statusBar");
     setStatusBar(statusBar_);
 
+    //---виджет общих данных проекта--------------------------------------------
+
+    generalProjectDataWidgetDock_ = new QDockWidget(this);
+    generalProjectDataWidgetDock_->setObjectName("generalProjectDataWidgetDock");
+    generalProjectDataWidgetDock_->setWidget(new PropertyEditor("generalProjectDataWidget", scriptEngine_, generalProjectDataWidgetDock_));
+    generalProjectDataWidgetDock_->setWindowTitle("Общие данные проекта");
+    generalProjectDataViewAction_ = generalProjectDataWidgetDock_->toggleViewAction();
+    //    generalProjectDataViewAction_->setIcon(QIcon("data/icons/generalProjectDataIcon.png"));
+    viewMenu_->addAction(generalProjectDataViewAction_);
+    addDockWidget(Qt::LeftDockWidgetArea, generalProjectDataWidgetDock_, Qt::Vertical);
+
     //---скриптовая консоль-----------------------------------------------------
 
     consoleWidget_ = new QDockWidget(this);
@@ -201,7 +213,7 @@ void MainWindow::on_saveProjectAsAction_triggered()
 
 void MainWindow::on_newProjectAction_triggered()
 {
-    QFile file("data/empty.psp");
+    QFile file("data/items/project/empty.psp");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         project_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
