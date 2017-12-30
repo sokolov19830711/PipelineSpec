@@ -53,8 +53,8 @@
                 "weldCtrl": 0,
                 "workPeriod": 0
             },
-            "type": "Section"
+            "type": "section"
         }
     ],
-    "type": "Project"
+    "type": "project"
 }

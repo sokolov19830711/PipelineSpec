@@ -1,6 +1,6 @@
 function Project()
 {
-    this.type = "Project";
+    this.type = "project";
     this.properties = {
         projID          : "<не задано>",
         fullName        : "<не задано>",
@@ -43,7 +43,19 @@ Project.ui = {
 
 };
 
-Project.createNew = function()
+function restoreItemTypes (sectionList)
 {
-    return new Project();
+    for (var i = 0; i < sectionList.length; i++)
+    {
+        console.log(i);
+        console.log(this[sectionList[i].type]);
+        sectionList[i].__proto__ = this[sectionList[i].type];
+        for (var j = 0; j < sectionList[i].itemList.length; j++)
+        {
+            sectionList[i].itemList[j].__proto__ = this[sectionList[i].itemList[j].type];
+        }
+    }
 }
+
+
+var project = new Project();

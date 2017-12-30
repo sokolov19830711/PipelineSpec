@@ -11,6 +11,7 @@
 #include <QStatusBar>
 #include <QToolBar>
 #include "scriptengine.h"
+#include "propertyeditor.h"
 
 
 
@@ -34,10 +35,11 @@ protected:
 
 private:
 
-    QJSValue project_;
+    QJSValue currentProject_;
     ScriptEngine* scriptEngine_;
     QDockWidget* consoleWidget_;
 
+    PropertyEditor* generalProjectDataWidget_;
     QDockWidget* generalProjectDataWidgetDock_;
     QDockWidget* sectionParamsWidgetDock_;
     QDockWidget* itemPropertiesWidgetDock_;

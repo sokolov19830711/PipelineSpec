@@ -1,6 +1,6 @@
 function Section()
 {
-    this.type = "Section";
+    this.type = "section";
     this.properties = {
         sectionName     : "",        /*Обозначение участка трубопровода*/
         from            : "",
@@ -311,12 +311,10 @@ Section.ui = {
 
 };
 
-Section.createNew = function()
-{
-    return new Section();
-}
 
 function interp(x, x1, x2, y1, y2)
 {
     return (y1 + (y2 - y1) / (x2 - x1) * (x - x1));
 }
+
+var section = new Section();

@@ -7,7 +7,6 @@
 #include <QFileDialog>
 #include <QJsonDocument>
 #include "scriptconsolewidget.h"
-#include "propertyeditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -132,8 +131,9 @@ MainWindow::MainWindow(QWidget *parent)
     //---виджет общих данных проекта--------------------------------------------
 
     generalProjectDataWidgetDock_ = new QDockWidget(this);
+    generalProjectDataWidget_ = new PropertyEditor("generalProjectDataWidget", scriptEngine_, generalProjectDataWidgetDock_);
     generalProjectDataWidgetDock_->setObjectName("generalProjectDataWidgetDock");
-    generalProjectDataWidgetDock_->setWidget(new PropertyEditor("generalProjectDataWidget", scriptEngine_, generalProjectDataWidgetDock_));
+    generalProjectDataWidgetDock_->setWidget(generalProjectDataWidget_);
     generalProjectDataWidgetDock_->setWindowTitle("Общие данные проекта");
     generalProjectDataViewAction_ = generalProjectDataWidgetDock_->toggleViewAction();
     //    generalProjectDataViewAction_->setIcon(QIcon("data/icons/generalProjectDataIcon.png"));
@@ -157,6 +157,9 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings settings("settings",  QSettings::IniFormat, this);
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
+
+    scriptEngine_->evaluateScriptFromFile("data/project.js");
+    scriptEngine_->evaluateScriptFromFile("data/section.js");
 }
 
 MainWindow::~MainWindow()
@@ -172,6 +175,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
+
+
 //---public slots----------------------------------------------------------------------------------------------
 
 void MainWindow::on_openProjectAction_triggered()
@@ -180,24 +185,26 @@ void MainWindow::on_openProjectAction_triggered()
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
 
-        project_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
-        scriptEngine_->globalObject().setProperty("project", project_);
-        project_.setProperty("projectFileName", file.fileName());
+        currentProject_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
+        scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
+        currentProject_.setProperty("projectFileName", file.fileName());
+        currentProject_.setPrototype(scriptEngine_->globalObject().property("project"));
+        scriptEngine_->globalObject().property("restoreItemTypes").call({currentProject_.property("sectionList")});
     }
 }
 
 void MainWindow::on_saveProjectAction_triggered()
 {
-    if (project_.property("projectFileName").toString() == "")
+    if (currentProject_.property("projectFileName").toString() == "")
     {
         on_saveProjectAsAction_triggered();
         return;
     }
 
-    QFile file(project_.property("projectFileName").toString());
+    QFile file(currentProject_.property("projectFileName").toString());
     if (file.open(QIODevice::WriteOnly))
     {
-        file.write((QJsonDocument::fromVariant(project_.toVariant())).toJson());
+        file.write((QJsonDocument::fromVariant(currentProject_.toVariant())).toJson());
     }
 }
 
@@ -206,17 +213,14 @@ void MainWindow::on_saveProjectAsAction_triggered()
     QFile file(QFileDialog::getSaveFileName(this, "Сохранить проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
     if (file.open(QIODevice::WriteOnly))
     {
-        project_.setProperty("projectFileName", file.fileName());
-        file.write((QJsonDocument::fromVariant(project_.toVariant())).toJson());
+        currentProject_.setProperty("projectFileName", file.fileName());
+        file.write((QJsonDocument::fromVariant(currentProject_.toVariant())).toJson());
     }
 }
 
 void MainWindow::on_newProjectAction_triggered()
 {
-    QFile file("data/items/project/empty.psp");
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        project_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
-        scriptEngine_->globalObject().setProperty("project", project_);
-    }
+    currentProject_ = scriptEngine_->globalObject().property("Project").callAsConstructor();
+    scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
+    generalProjectDataWidget_->setupEditor(currentProject_);
 }

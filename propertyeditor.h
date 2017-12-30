@@ -22,6 +22,8 @@ public:
     explicit PropertyEditor(const QString& name, ScriptEngine* scriptEngine, QWidget *parent = 0);
     ~PropertyEditor();
 
+    void setupEditor(QJSValue& item);
+
 //    Q_PROPERTY(int rowCount READ rowCount WRITE setRowCount)
 
 //    Q_INVOKABLE int rowCount() const;
@@ -70,6 +72,7 @@ private:
     QLabel* image_;
     QLabel* imageCaption_;
     QVBoxLayout* layout_;
+    QJSValue item_;
 
 public slots:
 };

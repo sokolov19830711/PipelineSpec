@@ -42,6 +42,11 @@ PropertyEditor::~PropertyEditor()
 
 }
 
+void PropertyEditor::setupEditor(QJSValue& item)
+{
+    item_ = item;
+}
+
 //int PropertyEditor::rowCount() const
 //{
 //    return table_->rowCount();
