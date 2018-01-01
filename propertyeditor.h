@@ -23,6 +23,7 @@ public:
     ~PropertyEditor();
 
     void setupEditor(QJSValue& item);
+    void refreshValues();
 
 //    Q_PROPERTY(int rowCount READ rowCount WRITE setRowCount)
 
@@ -44,8 +45,8 @@ public:
 //    Q_INVOKABLE void setComboBox(const QString& currentText, const QStringList& valueList);
 //    Q_INVOKABLE void removeComboBox(int row);
 
-//    Q_INVOKABLE void setLineEdit(const QString& currentText);
-//    Q_INVOKABLE void removeLineEdit(int row);
+    void setLineEdit();
+    void removeLineEdit(int row);
 
 //    Q_INVOKABLE void setSpinBox();
 //    Q_INVOKABLE void removeSpinBox(int row);
@@ -61,12 +62,13 @@ public:
 
 signals:
 
-    void cellClicked(int row, int column);
-    void currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+//    void cellClicked(int row, int column);
+//    void currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
 protected:
 
 private:
+
     ScriptEngine* scriptEngine_;
     QTableWidget* table_;
     QLabel* image_;
@@ -74,7 +76,14 @@ private:
     QVBoxLayout* layout_;
     QJSValue item_;
 
+    QVariant propertyDesc(int row, const QString& descriptorName) const;
+    QString widgetType(int row) const;
+    QString propertyName(int row) const;
+    void writePropertyValue(int row, const QString& value) const;
+
 public slots:
+
+    void currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 };
 
 #endif // PROPERTYEDITOR_H

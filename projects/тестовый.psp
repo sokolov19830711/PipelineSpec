@@ -13,7 +13,7 @@
         "head": "<не задано>",
         "insulationMark": "<не задано>",
         "mountMark": "<не задано>",
-        "projID": "<не задано>",
+        "projID": "12345",
         "stage": "П"
     },
     "sectionList": [

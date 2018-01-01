@@ -190,6 +190,8 @@ void MainWindow::on_openProjectAction_triggered()
         currentProject_.setProperty("projectFileName", file.fileName());
         currentProject_.setPrototype(scriptEngine_->globalObject().property("project"));
         scriptEngine_->globalObject().property("restoreItemTypes").call({currentProject_.property("sectionList")});
+        generalProjectDataWidget_->setupEditor(currentProject_);
+        generalProjectDataWidget_->refreshValues();
     }
 }
 
@@ -223,4 +225,5 @@ void MainWindow::on_newProjectAction_triggered()
     currentProject_ = scriptEngine_->globalObject().property("Project").callAsConstructor();
     scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
     generalProjectDataWidget_->setupEditor(currentProject_);
+    generalProjectDataWidget_->refreshValues();
 }

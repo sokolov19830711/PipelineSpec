@@ -33,7 +33,7 @@ PropertyEditor::PropertyEditor(const QString &name, ScriptEngine *scriptEngine, 
 //    layout_->addWidget(imageCaption_);
     setLayout(layout_);
 
-    connect(table_, &QTableWidget::cellClicked, this, &PropertyEditor::cellClicked);
+//    connect(table_, &QTableWidget::cellClicked, this, &PropertyEditor::cellClicked);
     connect(table_, &QTableWidget::currentCellChanged, this, &PropertyEditor::currentCellChanged);
 }
 
@@ -44,7 +44,92 @@ PropertyEditor::~PropertyEditor()
 
 void PropertyEditor::setupEditor(QJSValue& item)
 {
+    table_->setRowCount(0);
     item_ = item;
+    for (auto & i : (item_.property("ui").call().property("table")).toVariant().toList())
+    {
+        table_->setRowCount(table_->rowCount() + 1);
+
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setData(Qt::UserRole, i);
+        table_->setItem(table_->rowCount() - 1, 0, item);
+
+        QLabel* label = new QLabel((i.toMap()["caption"]).toString());
+        label->setToolTip((i.toMap()["toolTip"]).toString());
+        table_->setCellWidget(table_->rowCount() - 1, 0, label);
+    }
+}
+
+void PropertyEditor::refreshValues()
+{
+    for (int i = 0; i < table_->rowCount(); i++)
+    {
+        table_->setItem(i, 1, new QTableWidgetItem(item_.property("properties").property(propertyDesc(i, "propertyName").toString()).toString()));
+    }
+}
+
+void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
+{
+    if (previousColumn != 0 && previousColumn != -1 && previousRow != -1)
+    {
+        if (widgetType(previousRow) == "lineEdit")
+        {
+            removeLineEdit(previousRow);
+        }
+    }
+
+    if (currentColumn != 0)
+    {
+        if (widgetType(currentRow) == "lineEdit")
+        {
+            setLineEdit();
+        }
+    }
+}
+
+QVariant PropertyEditor::propertyDesc(int row, const QString& descriptorName) const
+{
+    return table_->item(row,0)->data(Qt::UserRole).toMap()[descriptorName];
+}
+
+QString PropertyEditor::widgetType(int row) const
+{
+    return propertyDesc(row, "widgetType").toString();
+}
+
+QString PropertyEditor::propertyName(int row) const
+{
+    return propertyDesc(row, "propertyName").toString();
+}
+
+void PropertyEditor::writePropertyValue(int row, const QString &value) const
+{
+    item_.property("properties").setProperty(propertyName(row), QJSValue(value));
+}
+
+//------------------------------------------------------------------------------------------------------------
+
+void PropertyEditor::setLineEdit()
+{
+    QLineEdit* lineEdit = new QLineEdit(this);
+    lineEdit->setText(table_->item(table_->currentRow(), table_->currentColumn())->text());
+    lineEdit->selectAll();
+    table_->setCellWidget(table_->currentRow(), 1, lineEdit);
+}
+
+void PropertyEditor::removeLineEdit(int row)
+{
+    QTableWidgetItem* item = new QTableWidgetItem;
+    QLineEdit* lineEdit = dynamic_cast<QLineEdit*> (table_->cellWidget(row, 1));
+    if (lineEdit)
+    {
+        QString currentText = lineEdit->text();
+        item->setText(currentText);
+        writePropertyValue(row, currentText);
+        table_->removeCellWidget(row, 1);
+        table_->setItem(row, 1, item);
+
+    }
 }
 
 //int PropertyEditor::rowCount() const
@@ -126,27 +211,9 @@ void PropertyEditor::setupEditor(QJSValue& item)
 //    }
 //}
 
-//void PropertyEditor::setLineEdit(const QString& currentText)
-//{
-//    QLineEdit* lineEdit = new QLineEdit(this);
-//    lineEdit->setObjectName("lineEdit");
-//    lineEdit->setText(currentText);
-//    lineEdit->selectAll();
-//    table_->setCellWidget(table_->currentRow(), 1, lineEdit);
-//    scriptEngine_->makeQObjectScriptable(lineEdit, lineEdit->objectName());
-//}
 
-//void PropertyEditor::removeLineEdit(int row)
-//{
-//    QTableWidgetItem* item = new QTableWidgetItem;
-//    QLineEdit* lineEdit = dynamic_cast<QLineEdit*> (table_->cellWidget(row, 1));
-//    if (lineEdit)
-//    {
-//        item->setText(lineEdit->text());
-//        table_->removeCellWidget(row, 1);
-//        table_->setItem(row, 1, item);
-//    }
-//}
+
+
 
 //void PropertyEditor::setSpinBox()
 //{

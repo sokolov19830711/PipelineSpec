@@ -47,8 +47,6 @@ function restoreItemTypes (sectionList)
 {
     for (var i = 0; i < sectionList.length; i++)
     {
-        console.log(i);
-        console.log(this[sectionList[i].type]);
         sectionList[i].__proto__ = this[sectionList[i].type];
         for (var j = 0; j < sectionList[i].itemList.length; j++)
         {
