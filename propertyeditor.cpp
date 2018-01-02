@@ -8,7 +8,6 @@ PropertyEditor::PropertyEditor(const QString &name, ScriptEngine *scriptEngine, 
     scriptEngine_ = scriptEngine;
 
     table_ = new QTableWidget(this);
-    table_->setObjectName(this->objectName() + "_table");
     table_->horizontalHeader()->setStretchLastSection(true);
     table_->verticalHeader()->setVisible(false);
     table_->setAlternatingRowColors(true);
@@ -44,8 +43,8 @@ PropertyEditor::~PropertyEditor()
 
 void PropertyEditor::setupEditor(QJSValue& item)
 {
-    table_->setRowCount(0);
     item_ = item;
+    table_->setRowCount(0);
     for (auto & i : (item_.property("ui").call().property("table")).toVariant().toList())
     {
         table_->setRowCount(table_->rowCount() + 1);
@@ -70,19 +69,39 @@ void PropertyEditor::refreshValues()
 
 void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
 {
-    if (previousColumn != 0 && previousColumn != -1 && previousRow != -1)
+    if (previousColumn != 0 and previousColumn != -1 and previousRow != -1)
     {
         if (widgetType(previousRow) == "lineEdit")
         {
             removeLineEdit(previousRow);
         }
+
+        else if (widgetType(previousRow) == "spinBox")
+        {
+            removeSpinBox(previousRow);
+        }
+
+        else if (widgetType(previousRow) == "comboBox")
+        {
+            removeComboBox(previousRow);
+        }
     }
 
-    if (currentColumn != 0)
+    if (currentColumn != 0 and currentRow != -1)
     {
         if (widgetType(currentRow) == "lineEdit")
         {
             setLineEdit();
+        }
+
+        else if (widgetType(currentRow) == "spinBox")
+        {
+            setSpinBox();
+        }
+
+        else if (widgetType(currentRow) == "comboBox")
+        {
+            setComboBox();
         }
     }
 }
@@ -100,6 +119,17 @@ QString PropertyEditor::widgetType(int row) const
 QString PropertyEditor::propertyName(int row) const
 {
     return propertyDesc(row, "propertyName").toString();
+}
+
+QStringList PropertyEditor::valueList(int row) const
+{
+    QVariantList vList = item_.property("ui").call().property("table").property(row).property("valueList").call().toVariant().toList();
+    QStringList sList;
+    for (auto & i : vList)
+    {
+        sList << i.toString();
+    }
+    return sList;
 }
 
 void PropertyEditor::writePropertyValue(int row, const QString &value) const
@@ -132,166 +162,51 @@ void PropertyEditor::removeLineEdit(int row)
     }
 }
 
-//int PropertyEditor::rowCount() const
-//{
-//    return table_->rowCount();
-//}
-//void PropertyEditor::setRowCount(int rowCount)
-//{
-//    table_->setRowCount(rowCount);
-//}
+void PropertyEditor::setSpinBox()
+{
+    QDoubleSpinBox* spinBox = new QDoubleSpinBox(this);
+    spinBox->setDecimals(propertyDesc(table_->currentRow(), "decimals").toInt());
+    spinBox->setMinimum(propertyDesc(table_->currentRow(), "minimum").toDouble());
+    spinBox->setMaximum(propertyDesc(table_->currentRow(), "maximum").toDouble());
+    spinBox->setValue(table_->item(table_->currentRow(), 1)->text().toDouble());
+    table_->setCellWidget(table_->currentRow(), 1, spinBox);
+}
 
-//int PropertyEditor::currentRow() const
-//{
-//    return table_->currentRow();
-//}
+void PropertyEditor::removeSpinBox(int row)
+{
+    QTableWidgetItem* item = new QTableWidgetItem;
+    QDoubleSpinBox* spinBox = dynamic_cast<QDoubleSpinBox*> (table_->cellWidget(row, 1));
+    if (spinBox)
+    {
+        QString currentText = spinBox->text().replace(",", ".");
+        item->setText(currentText);
+        writePropertyValue(row, currentText);
+        table_->removeCellWidget(row, 1);
 
-//QString PropertyEditor::cellText(int row, int column) const
-//{
-//    if (table_->item(row, column)) return table_->item(row, column)->text();
-//    else return "<empty>";
-//}
+        table_->setItem(row, 1, item);
+    }
+}
 
-//void PropertyEditor::setCellText(int row, int column, const QString& text)
-//{
-//    QTableWidgetItem* item = table_->item(row, column);
-//    if (!item)
-//    {
-//        item = new QTableWidgetItem;
-//        table_->setItem(row, column, item);
-//    }
-//    item->setText(text);
-//}
+void PropertyEditor::setComboBox()
+{
+    QComboBox* comboBox = new QComboBox(this);
+    comboBox->addItems(valueList(table_->currentRow()));
+    comboBox->setCurrentText(table_->item(table_->currentRow(), 1)->text());
+    table_->setCellWidget(table_->currentRow(), 1, comboBox);
+    comboBox->showPopup();
+}
 
-//void PropertyEditor::replaceFullStop(int row, int column)
-//{
-//    QString text = table_->item(row, column)->text();
-//    text.replace(".", ",");
-//    setCellText(row, column, text);
-//}
+void PropertyEditor::removeComboBox(int row)
+{
+    QTableWidgetItem* item = new QTableWidgetItem;
+    QComboBox* comboBox = dynamic_cast<QComboBox*> (table_->cellWidget(row, 1));
+    if (comboBox)
+    {
+        QString currentText = comboBox->currentText();
+        item->setText(currentText);
+        writePropertyValue(row, currentText);
+        table_->removeCellWidget(row, 1);
+        table_->setItem(row, 1, item);
+    }
+}
 
-//void PropertyEditor::setCellLabel(int row, int column, const QString& text, const QString& toolTipText)
-//{
-//    QLabel* label = new QLabel(this);
-//    label->setText(text);
-//    label->setToolTip(toolTipText);
-//    table_->setCellWidget(row, column, label);
-//}
-
-//void PropertyEditor::setCurrentCell(int row, int column)
-//{
-//    table_->setCurrentCell(row, column);
-//}
-
-//void PropertyEditor::editCurrentItem()
-//{
-//    table_->editItem(table_->currentItem());
-//}
-
-//void PropertyEditor::setComboBox(const QString& currentText, const QStringList& valueList)
-//{
-//    QComboBox* comboBox = new QComboBox(this);
-//    comboBox->setObjectName("comboBox");
-//    comboBox->addItems(valueList);
-//    comboBox->setCurrentText(currentText);
-//    table_->setCellWidget(table_->currentRow(), 1, comboBox);
-//    scriptEngine_->makeQObjectScriptable(comboBox, comboBox->objectName());
-//    comboBox->showPopup();
-//}
-
-//void PropertyEditor::removeComboBox(int row)
-//{
-//    QTableWidgetItem* item = new QTableWidgetItem;
-//    QComboBox* comboBox = dynamic_cast<QComboBox*> (table_->cellWidget(row, 1));
-//    if (comboBox)
-//    {
-//        item->setText(comboBox->currentText());
-//        table_->removeCellWidget(row, 1);
-//        table_->setItem(row, 1, item);
-//    }
-//}
-
-
-
-
-
-//void PropertyEditor::setSpinBox()
-//{
-//    QDoubleSpinBox* spinBox = new QDoubleSpinBox(this);
-//    spinBox->setObjectName("spinBox");
-//    table_->setCellWidget(table_->currentRow(), 1, spinBox);
-//    scriptEngine_->makeQObjectScriptable(spinBox, spinBox->objectName());
-//}
-
-//void PropertyEditor::removeSpinBox(int row)
-//{
-//    QTableWidgetItem* item = new QTableWidgetItem;
-//    QDoubleSpinBox* spinBox = dynamic_cast<QDoubleSpinBox*> (table_->cellWidget(row, 1));
-//    if (spinBox)
-//    {
-//        item->setText(spinBox->text());
-//        table_->removeCellWidget(row, 1);
-//        table_->setItem(row, 1, item);
-//    }
-//}
-
-//void PropertyEditor::setYesNoBox(bool checked)
-//{
-//    QComboBox* comboBox = new QComboBox(this);
-//    comboBox->setObjectName("comboBox");
-//    comboBox->addItems({"Да", "Нет"});
-//    if (checked) comboBox->setCurrentText("Да");
-//    else comboBox->setCurrentText("Нет");
-//    table_->setCellWidget(table_->currentRow(), 1, comboBox);
-//    scriptEngine_->makeQObjectScriptable(comboBox, comboBox->objectName());
-//    comboBox->showPopup();
-//}
-
-//void PropertyEditor::removeYesNoBox(int row)
-//{
-//    QTableWidgetItem* item = new QTableWidgetItem;
-//    QComboBox* comboBox = dynamic_cast<QComboBox*> (table_->cellWidget(row, 1));
-//    if (comboBox)
-//    {
-//        item->setText(comboBox->currentText());
-//        table_->removeCellWidget(row, 1);
-//        table_->setItem(row, 1, item);
-//    }
-//}
-
-//void PropertyEditor::setCheckBox()
-//{
-//    QCheckBox* checkBox = new QCheckBox(this);
-//    checkBox->setObjectName("checkBox");
-//    table_->setCellWidget(table_->currentRow(), 1, checkBox);
-//    scriptEngine_->makeQObjectScriptable(checkBox, checkBox->objectName());
-//}
-
-//void PropertyEditor::setInactiveCheckBox(int row, int column, bool checked)
-//{
-//    QCheckBox* checkBox = new QCheckBox(this);
-//    checkBox->setObjectName("");
-//    checkBox->setChecked(checked);
-//    table_->setCellWidget(row, column, checkBox);
-//    scriptEngine_->makeQObjectScriptable(checkBox, checkBox->objectName());
-//}
-
-//void PropertyEditor::removeCheckBox(int row)
-//{
-//    QCheckBox* checkBox = dynamic_cast<QCheckBox*> (table_->cellWidget(row, 1));
-//    if (checkBox)
-//    {
-//        checkBox->setObjectName("");
-//    }
-//}
-
-//bool PropertyEditor::getBooleanValueFromCell(int row, int column)
-//{
-//    QCheckBox* checkBox = dynamic_cast<QCheckBox*> (table_->cellWidget(row, column));
-//    if (checkBox)
-//    {
-//        return checkBox->isChecked();
-//    }
-
-//    return false;
-//}

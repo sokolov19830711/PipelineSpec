@@ -184,7 +184,7 @@ void MainWindow::on_openProjectAction_triggered()
     QFile file(QFileDialog::getOpenFileName(this, "Открыть проект", "projects", "Файлы проектов PipelineSpec (*.psp)"));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-
+        scriptEngine_->globalObject().deleteProperty("currentProject");
         currentProject_ = scriptEngine_->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant());
         scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
         currentProject_.setProperty("projectFileName", file.fileName());
@@ -222,6 +222,7 @@ void MainWindow::on_saveProjectAsAction_triggered()
 
 void MainWindow::on_newProjectAction_triggered()
 {
+    scriptEngine_->globalObject().deleteProperty("currentProject");
     currentProject_ = scriptEngine_->globalObject().property("Project").callAsConstructor();
     scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
     generalProjectDataWidget_->setupEditor(currentProject_);

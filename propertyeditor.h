@@ -25,45 +25,17 @@ public:
     void setupEditor(QJSValue& item);
     void refreshValues();
 
-//    Q_PROPERTY(int rowCount READ rowCount WRITE setRowCount)
-
-//    Q_INVOKABLE int rowCount() const;
-//    Q_INVOKABLE void setRowCount(int rowCount);
-//    Q_INVOKABLE int currentRow() const;
-
-//    Q_INVOKABLE QString cellText(int row, int column) const;
-//    Q_INVOKABLE void setCellText(int row, int column, const QString& text = "");
-//    Q_INVOKABLE void replaceFullStop(int row, int column);
-
-//    Q_INVOKABLE QString cellText(int row, int column) const;
-//    Q_INVOKABLE void setCellLabel(int row, int column, const QString& text, const QString& toolTipText  = "");
-
-//    Q_INVOKABLE void setCurrentCell(int row, int column);
-
-//    Q_INVOKABLE void editCurrentItem();
-
-//    Q_INVOKABLE void setComboBox(const QString& currentText, const QStringList& valueList);
-//    Q_INVOKABLE void removeComboBox(int row);
+    void setComboBox();
+    void removeComboBox(int row);
 
     void setLineEdit();
     void removeLineEdit(int row);
 
-//    Q_INVOKABLE void setSpinBox();
-//    Q_INVOKABLE void removeSpinBox(int row);
-
-//    Q_INVOKABLE void setYesNoBox(bool checked);
-//    Q_INVOKABLE void removeYesNoBox(int row);
-
-//    Q_INVOKABLE void setCheckBox();
-//    Q_INVOKABLE void setInactiveCheckBox(int row, int column, bool checked);
-//    Q_INVOKABLE void removeCheckBox(int row);
-
-//    Q_INVOKABLE bool getBooleanValueFromCell(int row, int column);
+    void setSpinBox();
+    void removeSpinBox(int row);
 
 signals:
 
-//    void cellClicked(int row, int column);
-//    void currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
 protected:
 
@@ -79,6 +51,7 @@ private:
     QVariant propertyDesc(int row, const QString& descriptorName) const;
     QString widgetType(int row) const;
     QString propertyName(int row) const;
+    QStringList valueList(int row) const;
     void writePropertyValue(int row, const QString& value) const;
 
 public slots:

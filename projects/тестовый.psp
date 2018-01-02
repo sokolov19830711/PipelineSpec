@@ -3,7 +3,7 @@
     "projectFileName": "D:/Prog/pipelinespec/projects/тестовый.psp",
     "properties": {
         "CPE": "Соколов",
-        "T_min_air": "0",
+        "T_min_air": "-10",
         "check": "<не задано>",
         "ctrl": "<не задано>",
         "customer": "<не задано>",
@@ -14,7 +14,7 @@
         "insulationMark": "<не задано>",
         "mountMark": "<не задано>",
         "projID": "12345",
-        "stage": "П"
+        "stage": "Р"
     },
     "sectionList": [
         {
