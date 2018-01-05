@@ -140,6 +140,18 @@ MainWindow::MainWindow(QWidget *parent)
     viewMenu_->addAction(generalProjectDataViewAction_);
     addDockWidget(Qt::LeftDockWidgetArea, generalProjectDataWidgetDock_, Qt::Vertical);
 
+    //---виджет парметров участка--------------------------------------------
+
+    sectionParamsWidgetDock_ = new QDockWidget(this);
+    sectionParamsWidget_ = new PropertyEditor("sectionParamsWidget", scriptEngine_, generalProjectDataWidgetDock_);
+    sectionParamsWidgetDock_->setObjectName("sectionParamsWidgetDock");
+    sectionParamsWidgetDock_->setWidget(sectionParamsWidget_);
+    sectionParamsWidgetDock_->setWindowTitle("Параметры участка");
+    sectionParamsViewAction_ = sectionParamsWidgetDock_->toggleViewAction();
+    //    generalProjectDataViewAction_->setIcon(QIcon("data/icons/generalProjectDataIcon.png"));
+    viewMenu_->addAction(sectionParamsViewAction_);
+    addDockWidget(Qt::LeftDockWidgetArea, sectionParamsWidgetDock_, Qt::Vertical);
+
     //---скриптовая консоль-----------------------------------------------------
 
     consoleWidget_ = new QDockWidget(this);
@@ -158,8 +170,8 @@ MainWindow::MainWindow(QWidget *parent)
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
 
-    scriptEngine_->evaluateScriptFromFile("data/project.js");
     scriptEngine_->evaluateScriptFromFile("data/section.js");
+    scriptEngine_->evaluateScriptFromFile("data/project.js");
 }
 
 MainWindow::~MainWindow()
@@ -175,7 +187,24 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QMainWindow::closeEvent(event);
 }
 
+//---private functions-------------------------------------------------------------------------------------------
 
+void MainWindow::setCurrentSection(int index)
+{
+    if (index >= 0 and index < scriptEngine_->globalObject().property("currentProject").property("sectionList").property("length").toInt())
+    {
+        currentSection_ = scriptEngine_->globalObject().property("currentProject").property("sectionList").property(index);
+        scriptEngine_->globalObject().setProperty("currentSection", currentSection_);
+        currentProject_.setProperty("currentSectionIndex", index);
+        sectionParamsWidget_->setupEditor(currentSection_);
+        sectionParamsWidget_->refreshValues();
+    }
+}
+
+int MainWindow::currentSectionIndex() const
+{
+    return currentProject_.property("currentSectionIndex").toInt();
+}
 
 //---public slots----------------------------------------------------------------------------------------------
 
@@ -192,6 +221,7 @@ void MainWindow::on_openProjectAction_triggered()
         scriptEngine_->globalObject().property("restoreItemTypes").call({currentProject_.property("sectionList")});
         generalProjectDataWidget_->setupEditor(currentProject_);
         generalProjectDataWidget_->refreshValues();
+        setCurrentSection(currentSectionIndex());
     }
 }
 
@@ -223,8 +253,15 @@ void MainWindow::on_saveProjectAsAction_triggered()
 void MainWindow::on_newProjectAction_triggered()
 {
     scriptEngine_->globalObject().deleteProperty("currentProject");
-    currentProject_ = scriptEngine_->globalObject().property("Project").callAsConstructor();
+    currentProject_ = scriptEngine_->globalObject().property("EmptyProject").callAsConstructor();
+    currentProject_.setPrototype(scriptEngine_->globalObject().property("project"));
     scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
     generalProjectDataWidget_->setupEditor(currentProject_);
     generalProjectDataWidget_->refreshValues();
+}
+
+void MainWindow::on_newSectionAction_triggered()
+{
+    currentProject_.property("addNewSection").callWithInstance(currentProject_);
+    setCurrentSection(currentSectionIndex());
 }

@@ -1,5 +1,17 @@
 function Project()
 {
+    this.ui = function () {return Project.ui};
+    this.addNewSection = function()
+    {
+        var newSection = new EmptySection();
+        newSection.__proto__ = section;
+        this.sectionList.push(newSection);
+        this.currentSectionIndex = this.sectionList.length - 1;
+    }
+}
+
+function EmptyProject()
+{
     this.type = "project";
     this.properties = {
         projID          : "<не задано>",
@@ -16,8 +28,6 @@ function Project()
         insulationMark   : "<не задано>",
         T_min_air       : 0,
     };
-
-    this.ui = function () {return Project.ui};
 
     this.projectFileName = "";
     this.sectionList = [];
@@ -40,7 +50,6 @@ Project.ui = {
         {propertyName : "insulationMark", caption : "<i>&nbsp;Марка комплекта ТИ<i/>", widgetType : "lineEdit"},
         {propertyName : "T_min_air", caption : "<i>&nbsp;Мин. температура воздуха<i/>", widgetType : "spinBox", decimals : 0, maximum : 60, minimum : -60}
            ]
-
 };
 
 function restoreItemTypes (sectionList)
@@ -54,6 +63,5 @@ function restoreItemTypes (sectionList)
         }
     }
 }
-
 
 var project = new Project();

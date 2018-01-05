@@ -29,6 +29,7 @@ public slots:
     void on_saveProjectAction_triggered();
     void on_saveProjectAsAction_triggered();
     void on_newProjectAction_triggered();
+    void on_newSectionAction_triggered();
 
 protected:
     void closeEvent(QCloseEvent* event);
@@ -36,11 +37,16 @@ protected:
 private:
 
     QJSValue currentProject_;
+    QJSValue currentSection_;
+
+    void setCurrentSection(int index);
+    int currentSectionIndex() const;
     ScriptEngine* scriptEngine_;
     QDockWidget* consoleWidget_;
 
     PropertyEditor* generalProjectDataWidget_;
     QDockWidget* generalProjectDataWidgetDock_;
+    PropertyEditor* sectionParamsWidget_;
     QDockWidget* sectionParamsWidgetDock_;
     QDockWidget* itemPropertiesWidgetDock_;
 

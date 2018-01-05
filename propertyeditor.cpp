@@ -71,38 +71,16 @@ void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int p
 {
     if (previousColumn != 0 and previousColumn != -1 and previousRow != -1)
     {
-        if (widgetType(previousRow) == "lineEdit")
-        {
-            removeLineEdit(previousRow);
-        }
-
-        else if (widgetType(previousRow) == "spinBox")
-        {
-            removeSpinBox(previousRow);
-        }
-
-        else if (widgetType(previousRow) == "comboBox")
-        {
-            removeComboBox(previousRow);
-        }
+        if (widgetType(previousRow) == "lineEdit") removeLineEdit(previousRow);
+        else if (widgetType(previousRow) == "spinBox") removeSpinBox(previousRow);
+        else if (widgetType(previousRow) == "comboBox") removeComboBox(previousRow);
     }
 
     if (currentColumn != 0 and currentRow != -1)
     {
-        if (widgetType(currentRow) == "lineEdit")
-        {
-            setLineEdit();
-        }
-
-        else if (widgetType(currentRow) == "spinBox")
-        {
-            setSpinBox();
-        }
-
-        else if (widgetType(currentRow) == "comboBox")
-        {
-            setComboBox();
-        }
+        if (widgetType(currentRow) == "lineEdit") setLineEdit();
+        else if (widgetType(currentRow) == "spinBox") setSpinBox();
+        else if (widgetType(currentRow) == "comboBox") setComboBox();
     }
 }
 
@@ -123,7 +101,7 @@ QString PropertyEditor::propertyName(int row) const
 
 QStringList PropertyEditor::valueList(int row) const
 {
-    QVariantList vList = item_.property("ui").call().property("table").property(row).property("valueList").call().toVariant().toList();
+    QVariantList vList = item_.property("ui").call().property("table").property(row).property("valueList").call({item_}).toVariant().toList();
     QStringList sList;
     for (auto & i : vList)
     {

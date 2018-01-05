@@ -1,0 +1,24 @@
+{
+    "addNewSection": null,
+    "currentSectionIndex": -1,
+    "projectFileName": "D:/Prog/pipelinespec/projects/тестовый2.psp",
+    "properties": {
+        "CPE": "<не задано>",
+        "T_min_air": 0,
+        "check": "<не задано>",
+        "ctrl": "<не задано>",
+        "customer": "<не задано>",
+        "date": "<не задано>",
+        "developer": "<не задано>",
+        "fullName": "<не задано>",
+        "head": "<не задано>",
+        "insulationMark": "<не задано>",
+        "mountMark": "<не задано>",
+        "projID": "<не задано>",
+        "stage": "П"
+    },
+    "sectionList": [
+    ],
+    "type": "project",
+    "ui": null
+}
