@@ -8,6 +8,15 @@ function Project()
         this.sectionList.push(newSection);
         this.currentSectionIndex = this.sectionList.length - 1;
     }
+    this.sectionNamesList = function()
+    {
+        var names = [];
+        for (var i = 0; i < this.sectionList.length; i++)
+        {
+            names.push(this.sectionList[i].properties.sectionName)
+        }
+        return names;
+    }
 }
 
 function EmptyProject()

@@ -2,10 +2,9 @@
 
 #include <QDebug>
 
-PropertyEditor::PropertyEditor(const QString &name, ScriptEngine *scriptEngine, QWidget *parent) : QWidget(parent)
+PropertyEditor::PropertyEditor(const QString &name, QWidget *parent) : QWidget(parent)
 {
     setObjectName(name);
-    scriptEngine_ = scriptEngine;
 
     table_ = new QTableWidget(this);
     table_->horizontalHeader()->setStretchLastSection(true);
@@ -63,7 +62,14 @@ void PropertyEditor::refreshValues()
 {
     for (int i = 0; i < table_->rowCount(); i++)
     {
-        table_->setItem(i, 1, new QTableWidgetItem(item_.property("properties").property(propertyDesc(i, "propertyName").toString()).toString()));
+        QTableWidgetItem* newTableItem = new QTableWidgetItem;
+        if (propertyDesc(i, "widgetType").toString() == "yesNoBox")
+        {
+            if (item_.property("properties").property(propertyDesc(i, "propertyName").toString()).toBool()) newTableItem->setText("Да");
+            else newTableItem->setText("Нет");
+        }
+        else newTableItem->setText(item_.property("properties").property(propertyDesc(i, "propertyName").toString()).toString());
+        table_->setItem(i, 1, newTableItem);
     }
 }
 
@@ -74,6 +80,7 @@ void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int p
         if (widgetType(previousRow) == "lineEdit") removeLineEdit(previousRow);
         else if (widgetType(previousRow) == "spinBox") removeSpinBox(previousRow);
         else if (widgetType(previousRow) == "comboBox") removeComboBox(previousRow);
+        else if (widgetType(previousRow) == "yesNoBox") removeYesNoBox(previousRow);
     }
 
     if (currentColumn != 0 and currentRow != -1)
@@ -81,6 +88,7 @@ void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int p
         if (widgetType(currentRow) == "lineEdit") setLineEdit();
         else if (widgetType(currentRow) == "spinBox") setSpinBox();
         else if (widgetType(currentRow) == "comboBox") setComboBox();
+        else if (widgetType(currentRow) == "yesNoBox") setYesNoBox();
     }
 }
 
@@ -111,6 +119,11 @@ QStringList PropertyEditor::valueList(int row) const
 }
 
 void PropertyEditor::writePropertyValue(int row, const QString &value) const
+{
+    item_.property("properties").setProperty(propertyName(row), QJSValue(value));
+}
+
+void PropertyEditor::writePropertyValue(int row, bool value) const
 {
     item_.property("properties").setProperty(propertyName(row), QJSValue(value));
 }
@@ -188,3 +201,26 @@ void PropertyEditor::removeComboBox(int row)
     }
 }
 
+void PropertyEditor::setYesNoBox()
+{
+    QComboBox* comboBox = new QComboBox(this);
+    comboBox->addItems({"Да", "Нет"});
+    comboBox->setCurrentText(table_->item(table_->currentRow(), 1)->text());
+    table_->setCellWidget(table_->currentRow(), 1, comboBox);
+    comboBox->showPopup();
+}
+
+void PropertyEditor::removeYesNoBox(int row)
+{
+    QTableWidgetItem* item = new QTableWidgetItem;
+    QComboBox* comboBox = dynamic_cast<QComboBox*> (table_->cellWidget(row, 1));
+    if (comboBox)
+    {
+        QString currentText = comboBox->currentText();
+        item->setText(currentText);
+        if (currentText == "Да") writePropertyValue(row, true);
+        else writePropertyValue(row, false);
+        table_->removeCellWidget(row, 1);
+        table_->setItem(row, 1, item);
+    }
+}

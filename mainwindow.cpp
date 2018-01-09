@@ -131,7 +131,7 @@ MainWindow::MainWindow(QWidget *parent)
     //---виджет общих данных проекта--------------------------------------------
 
     generalProjectDataWidgetDock_ = new QDockWidget(this);
-    generalProjectDataWidget_ = new PropertyEditor("generalProjectDataWidget", scriptEngine_, generalProjectDataWidgetDock_);
+    generalProjectDataWidget_ = new PropertyEditor("generalProjectDataWidget", generalProjectDataWidgetDock_);
     generalProjectDataWidgetDock_->setObjectName("generalProjectDataWidgetDock");
     generalProjectDataWidgetDock_->setWidget(generalProjectDataWidget_);
     generalProjectDataWidgetDock_->setWindowTitle("Общие данные проекта");
@@ -143,14 +143,24 @@ MainWindow::MainWindow(QWidget *parent)
     //---виджет парметров участка--------------------------------------------
 
     sectionParamsWidgetDock_ = new QDockWidget(this);
-    sectionParamsWidget_ = new PropertyEditor("sectionParamsWidget", scriptEngine_, generalProjectDataWidgetDock_);
+    sectionParamsWidget_ = new PropertyEditor("sectionParamsWidget", generalProjectDataWidgetDock_);
     sectionParamsWidgetDock_->setObjectName("sectionParamsWidgetDock");
     sectionParamsWidgetDock_->setWidget(sectionParamsWidget_);
     sectionParamsWidgetDock_->setWindowTitle("Параметры участка");
     sectionParamsViewAction_ = sectionParamsWidgetDock_->toggleViewAction();
-    //    generalProjectDataViewAction_->setIcon(QIcon("data/icons/generalProjectDataIcon.png"));
     viewMenu_->addAction(sectionParamsViewAction_);
     addDockWidget(Qt::LeftDockWidgetArea, sectionParamsWidgetDock_, Qt::Vertical);
+
+    //---виджет со списком участков-----------------------------------------------
+
+    sectionListWidgetDock_ = new QDockWidget(this);
+    sectionListWidget_ = new SectionListWidget(generalProjectDataWidgetDock_);
+    sectionListWidgetDock_->setObjectName("sectionListWidgetDock");
+    sectionListWidgetDock_->setWidget(sectionListWidget_);
+    sectionListWidgetDock_->setWindowTitle("Список участков");
+    sectionListViewAction_ = sectionListWidgetDock_->toggleViewAction();
+    viewMenu_->addAction(sectionListViewAction_);
+    addDockWidget(Qt::RightDockWidgetArea, sectionListWidgetDock_, Qt::Vertical);
 
     //---скриптовая консоль-----------------------------------------------------
 
@@ -222,6 +232,7 @@ void MainWindow::on_openProjectAction_triggered()
         generalProjectDataWidget_->setupEditor(currentProject_);
         generalProjectDataWidget_->refreshValues();
         setCurrentSection(currentSectionIndex());
+        sectionListWidget_->setupWidget(currentProject_);
     }
 }
 
@@ -258,10 +269,13 @@ void MainWindow::on_newProjectAction_triggered()
     scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
     generalProjectDataWidget_->setupEditor(currentProject_);
     generalProjectDataWidget_->refreshValues();
+    sectionParamsWidget_->refreshValues();
+    sectionListWidget_->setupWidget(currentProject_);
 }
 
 void MainWindow::on_newSectionAction_triggered()
 {
     currentProject_.property("addNewSection").callWithInstance(currentProject_);
     setCurrentSection(currentSectionIndex());
+    sectionListWidget_->setupWidget(currentProject_);
 }

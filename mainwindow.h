@@ -12,6 +12,7 @@
 #include <QToolBar>
 #include "scriptengine.h"
 #include "propertyeditor.h"
+#include "sectionlistwidget.h"
 
 
 
@@ -49,10 +50,14 @@ private:
     PropertyEditor* sectionParamsWidget_;
     QDockWidget* sectionParamsWidgetDock_;
     QDockWidget* itemPropertiesWidgetDock_;
+    SectionListWidget* sectionListWidget_;
+    QDockWidget* sectionListWidgetDock_;
+
 
     QAction* generalProjectDataViewAction_;
     QAction* sectionParamsViewAction_;
     QAction* itemPropertiesViewAction_;
+    QAction* sectionListViewAction_;
 
     QAction *newProjectAction_;
     QAction *openProjectAction_;

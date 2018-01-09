@@ -11,15 +11,14 @@
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QDoubleSpinBox>
-
-#include "scriptengine.h"
+#include <QJSValue>
 
 class PropertyEditor : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PropertyEditor(const QString& name, ScriptEngine* scriptEngine, QWidget *parent = 0);
+    explicit PropertyEditor(const QString& name, QWidget *parent = 0);
     ~PropertyEditor();
 
     void setupEditor(QJSValue& item);
@@ -34,6 +33,9 @@ public:
     void setSpinBox();
     void removeSpinBox(int row);
 
+    void setYesNoBox();
+    void removeYesNoBox(int row);
+
 signals:
 
 
@@ -41,7 +43,6 @@ protected:
 
 private:
 
-    ScriptEngine* scriptEngine_;
     QTableWidget* table_;
     QLabel* image_;
     QLabel* imageCaption_;
@@ -53,6 +54,7 @@ private:
     QString propertyName(int row) const;
     QStringList valueList(int row) const;
     void writePropertyValue(int row, const QString& value) const;
+    void writePropertyValue(int row, bool value) const;
 
 public slots:
 
