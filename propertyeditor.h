@@ -23,6 +23,7 @@ public:
 
     void setupEditor(QJSValue& item);
     void refreshValues();
+    void clearTable();
 
     void setComboBox();
     void removeComboBox(int row);
@@ -37,7 +38,7 @@ public:
     void removeYesNoBox(int row);
 
 signals:
-
+    propertyValueChanged(const QString& propertyName, const QString& value);
 
 protected:
 

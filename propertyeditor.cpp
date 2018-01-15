@@ -73,6 +73,15 @@ void PropertyEditor::refreshValues()
     }
 }
 
+void PropertyEditor::clearTable()
+{
+    for (int i = 0; i < table_->rowCount(); i++)
+    {
+        QTableWidgetItem* newTableItem = new QTableWidgetItem;
+        table_->setItem(i, 1, newTableItem);
+    }
+}
+
 void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
 {
     if (previousColumn != 0 and previousColumn != -1 and previousRow != -1)
@@ -81,6 +90,7 @@ void PropertyEditor::currentCellChanged(int currentRow, int currentColumn, int p
         else if (widgetType(previousRow) == "spinBox") removeSpinBox(previousRow);
         else if (widgetType(previousRow) == "comboBox") removeComboBox(previousRow);
         else if (widgetType(previousRow) == "yesNoBox") removeYesNoBox(previousRow);
+        emit propertyValueChanged(propertyDesc(previousRow,"propertyName").toString(), table_->item(previousRow, previousColumn)->text());
     }
 
     if (currentColumn != 0 and currentRow != -1)

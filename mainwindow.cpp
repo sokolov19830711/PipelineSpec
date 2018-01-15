@@ -175,6 +175,7 @@ MainWindow::MainWindow(QWidget *parent)
     //--------------------------------------------------------------------------
 
     QMetaObject::connectSlotsByName(this);
+    connect(sectionParamsWidget_, &PropertyEditor::propertyValueChanged, sectionListWidget_, &SectionListWidget::on_propertyValueChanged);
 
     QSettings settings("settings",  QSettings::IniFormat, this);
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -269,7 +270,7 @@ void MainWindow::on_newProjectAction_triggered()
     scriptEngine_->globalObject().setProperty("currentProject", currentProject_);
     generalProjectDataWidget_->setupEditor(currentProject_);
     generalProjectDataWidget_->refreshValues();
-    sectionParamsWidget_->refreshValues();
+    sectionParamsWidget_->clearTable();
     sectionListWidget_->setupWidget(currentProject_);
 }
 

@@ -15,10 +15,12 @@ public:
     ~SectionListWidget();
 
     void setupWidget(QJSValue& item);
+    void refreshList();
 
 signals:
 
 public slots:
+    void on_propertyValueChanged(const QString& propertyName, const QString& value);
 
 private:
     QListWidget* list_;
