@@ -31,6 +31,7 @@ public slots:
     void on_saveProjectAsAction_triggered();
     void on_newProjectAction_triggered();
     void on_newSectionAction_triggered();
+    void on_sectionListWidget_currentSectionChanged(int sectionIndex);
 
 protected:
     void closeEvent(QCloseEvent* event);

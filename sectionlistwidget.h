@@ -18,6 +18,7 @@ public:
     void refreshList();
 
 signals:
+    currentSectionChanged(int sectionIndex);
 
 public slots:
     void on_propertyValueChanged(const QString& propertyName, const QString& value);

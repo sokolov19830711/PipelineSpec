@@ -7,6 +7,8 @@ SectionListWidget::SectionListWidget(QWidget *parent) : QWidget(parent)
     layout_ = new QVBoxLayout(this);
     layout_->addWidget(list_);
     setLayout(layout_);
+
+    connect(list_, &QListWidget::currentRowChanged, this, &SectionListWidget::currentSectionChanged);
 }
 
 SectionListWidget::~SectionListWidget()

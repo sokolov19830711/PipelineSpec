@@ -176,6 +176,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QMetaObject::connectSlotsByName(this);
     connect(sectionParamsWidget_, &PropertyEditor::propertyValueChanged, sectionListWidget_, &SectionListWidget::on_propertyValueChanged);
+    connect(sectionListWidget_, &SectionListWidget::currentSectionChanged, this, MainWindow::on_sectionListWidget_currentSectionChanged);
 
     QSettings settings("settings",  QSettings::IniFormat, this);
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -279,4 +280,9 @@ void MainWindow::on_newSectionAction_triggered()
     currentProject_.property("addNewSection").callWithInstance(currentProject_);
     setCurrentSection(currentSectionIndex());
     sectionListWidget_->setupWidget(currentProject_);
+}
+
+void MainWindow::on_sectionListWidget_currentSectionChanged(int sectionIndex)
+{
+    setCurrentSection(sectionIndex);
 }
