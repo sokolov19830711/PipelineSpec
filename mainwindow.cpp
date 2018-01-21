@@ -282,6 +282,12 @@ void MainWindow::on_newSectionAction_triggered()
     sectionListWidget_->setupWidget(currentProject_);
 }
 
+void MainWindow::on_calcSectionParamsAction_triggered()
+{
+    currentSection_.property("calc").callWithInstance({currentSection_});
+    sectionParamsWidget_->refreshValues();
+}
+
 void MainWindow::on_sectionListWidget_currentSectionChanged(int sectionIndex)
 {
     setCurrentSection(sectionIndex);

@@ -170,6 +170,7 @@ void PropertyEditor::setSpinBox()
     spinBox->setMinimum(propertyDesc(table_->currentRow(), "minimum").toDouble());
     spinBox->setMaximum(propertyDesc(table_->currentRow(), "maximum").toDouble());
     spinBox->setValue(table_->item(table_->currentRow(), 1)->text().toDouble());
+    spinBox->selectAll();
     table_->setCellWidget(table_->currentRow(), 1, spinBox);
 }
 

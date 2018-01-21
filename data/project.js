@@ -13,7 +13,7 @@ function Project()
         var names = [];
         for (var i = 0; i < this.sectionList.length; i++)
         {
-            names.push(this.sectionList[i].properties.sectionName)
+            names.push(this.sectionList[i].properties.sectionName + " - " + this.sectionList[i].properties.product)
         }
         return names;
     }

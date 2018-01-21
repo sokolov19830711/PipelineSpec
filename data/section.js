@@ -295,7 +295,7 @@ Section.ui = {
         {propertyName : "weldCtrl", caption : "<i>&nbsp;Контроль сварных швов</i>", toolTip : "Объем контроля сварных швов, %",
             widgetType : "spinBox", decimals : 0, maximum : 100, minimum : 0},
         {propertyName : "corr", caption : "<i>&nbsp;Скорость коррозии</i>", toolTip : "Скорость коррозии материала трубопровода, мм в год",
-            widgetType : "spinBox"},
+            widgetType : "spinBox", decimals : 1, maximum : 0.5, minimum : 0, singleStep : 0.1},
         {propertyName : "workPeriod", caption : "<i>&nbsp;Скорость службы</i>", toolTip : "Скорость службы участка трубопровода, лет",
             widgetType : "spinBox", decimals : 0, maximum : 50, minimum : 0},
 
