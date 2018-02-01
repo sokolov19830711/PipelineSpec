@@ -36,3 +36,8 @@ void SectionListWidget::refreshList()
         list_->addItem(i.toString());
     }
 }
+
+void SectionListWidget::setCurrentRow(int row)
+{
+    list_->setCurrentRow(row);
+}

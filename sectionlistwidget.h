@@ -16,6 +16,7 @@ public:
 
     void setupWidget(QJSValue& item);
     void refreshList();
+    void setCurrentRow(int row);
 
 signals:
     currentSectionChanged(int sectionIndex);

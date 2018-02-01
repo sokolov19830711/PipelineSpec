@@ -235,6 +235,7 @@ void MainWindow::on_openProjectAction_triggered()
         generalProjectDataWidget_->refreshValues();
         setCurrentSection(currentSectionIndex());
         sectionListWidget_->setupWidget(currentProject_);
+        sectionListWidget_->setCurrentRow(currentSectionIndex() + 1);
     }
 }
 
