@@ -30,11 +30,13 @@ SOURCES += \
     scriptengine.cpp \
     scriptconsolewidget.cpp \
     propertyeditor.cpp \
-    sectionlistwidget.cpp
+    sectionlistwidget.cpp \
+    itemlistwidget.cpp
 
 HEADERS += \
         mainwindow.h \
     scriptengine.h \
     scriptconsolewidget.h \
     propertyeditor.h \
-    sectionlistwidget.h
+    sectionlistwidget.h \
+    itemlistwidget.h

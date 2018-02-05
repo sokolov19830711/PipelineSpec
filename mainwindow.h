@@ -10,9 +10,12 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QToolBar>
+#include <QTextEdit>
+
 #include "scriptengine.h"
 #include "propertyeditor.h"
 #include "sectionlistwidget.h"
+#include "itemlistwidget.h"
 
 
 
@@ -31,6 +34,7 @@ public slots:
     void on_saveProjectAsAction_triggered();
     void on_newProjectAction_triggered();
     void on_newSectionAction_triggered();
+    void on_deleteSectionAction_triggered();
 
     void on_calcSectionParamsAction_triggered();
 
@@ -56,7 +60,8 @@ private:
     QDockWidget* itemPropertiesWidgetDock_;
     SectionListWidget* sectionListWidget_;
     QDockWidget* sectionListWidgetDock_;
-
+    ItemListWidget* itemListWidget_;
+//    QTextEdit* textEdit_;
 
     QAction* generalProjectDataViewAction_;
     QAction* sectionParamsViewAction_;
@@ -84,8 +89,8 @@ private:
     QAction *movePosUpAction_;
     QAction *movePosDownAction_;
 
-    QWidget *centralWidget_;
-    QMdiArea *mdiArea_;
+//    QWidget *centralWidget_;
+//    QMdiArea *mdiArea_;
     QMenuBar *menuBar_;
 
     QMenu *fileMenu_;

@@ -1,5 +1,5 @@
 {
-    "currentSectionIndex": 3,
+    "currentSectionIndex": 4,
     "projectFileName": "D:/Prog/pipelinespec/projects/тестовый3.psp",
     "properties": {
         "CPE": "<не задано>",
@@ -166,6 +166,44 @@
                 "to": "Узлов присоединения",
                 "weldCtrl": 0,
                 "workPeriod": "20"
+            },
+            "type": "section"
+        },
+        {
+            "itemList": [
+            ],
+            "properties": {
+                "M_ger": "-",
+                "M_plo": "-",
+                "M_pro": "-",
+                "P_ger": 0,
+                "P_plo": 0,
+                "P_pro": 0,
+                "P_rab": 0,
+                "P_rab_text": "",
+                "P_ras": 0,
+                "P_usl": 0,
+                "T1": 0,
+                "T2": 0,
+                "T_max": 0,
+                "category": "",
+                "corr": 0,
+                "dP": 0,
+                "from": "",
+                "group": "",
+                "insul_type": "-",
+                "isFlare": false,
+                "isHeated": false,
+                "isInsulated": false,
+                "isSteam": false,
+                "isTherm": false,
+                "material": "",
+                "product": "",
+                "sectionName": "новый участок",
+                "t": 24,
+                "to": "",
+                "weldCtrl": 0,
+                "workPeriod": 0
             },
             "type": "section"
         }

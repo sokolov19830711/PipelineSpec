@@ -5,9 +5,11 @@ INPUT(
 ./debug\scriptconsolewidget.o
 ./debug\propertyeditor.o
 ./debug\sectionlistwidget.o
+./debug\itemlistwidget.o
 ./debug\moc_mainwindow.o
 ./debug\moc_scriptengine.o
 ./debug\moc_scriptconsolewidget.o
 ./debug\moc_propertyeditor.o
 ./debug\moc_sectionlistwidget.o
+./debug\moc_itemlistwidget.o
 );

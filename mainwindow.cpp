@@ -6,16 +6,23 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QJsonDocument>
+#include <QMessageBox>
 #include "scriptconsolewidget.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    centralWidget_ = new QWidget(this);
-    centralWidget_->setObjectName("centralWidget");
-    mdiArea_ = new QMdiArea(centralWidget_);
-    mdiArea_->setObjectName("mdiArea");
-    setCentralWidget(mdiArea_);
+//    centralWidget_ = new QWidget(this);
+//    centralWidget_->setObjectName("centralWidget");
+//    mdiArea_ = new QMdiArea(centralWidget_);
+//    mdiArea_->setObjectName("mdiArea");
+    itemListWidget_ = new ItemListWidget(this);
+//    textEdit_ = new QTextEdit(this);
+//    QFile* file = new QFile("test2.htm");
+//    file->open(QIODevice::ReadOnly | QIODevice::Text);
+//    textEdit_->setHtml(QString(file->readAll()));
+
+    setCentralWidget(itemListWidget_);
 
     scriptEngine_ = new ScriptEngine(this);
     scriptEngine_->installExtensions(QJSEngine::ConsoleExtension);
@@ -45,6 +52,11 @@ MainWindow::MainWindow(QWidget *parent)
     newSectionAction_->setObjectName("newSectionAction");
     newSectionAction_->setText("Новый участок");
     newSectionAction_->setIcon(QIcon("data/icons/newSectionIcon.png"));
+
+    deleteSectionAction_ = new QAction(this);
+    deleteSectionAction_->setObjectName("deleteSectionAction");
+    deleteSectionAction_->setText("Удалить участок");
+    deleteSectionAction_->setIcon(QIcon("data/icons/deleteSectionIcon.png"));
 
     exitAction_ = new QAction(this);
     exitAction_->setObjectName("exitAction");
@@ -109,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
     fileMenu_->addAction(exitAction_);
 
     projectMenu_->addAction(newSectionAction_);
+    projectMenu_->addAction(deleteSectionAction_);
 
     sectionMenu_->addAction(calcSectionParamsAction_);
 
@@ -122,6 +135,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainToolBar_->addAction(saveProjectAction_);
     mainToolBar_->addSeparator();
     mainToolBar_->addAction(newSectionAction_);
+    mainToolBar_->addAction(deleteSectionAction_);
     mainToolBar_->addAction(calcSectionParamsAction_);
 
     statusBar_ = new QStatusBar(this);
@@ -281,6 +295,11 @@ void MainWindow::on_newSectionAction_triggered()
     currentProject_.property("addNewSection").callWithInstance(currentProject_);
     setCurrentSection(currentSectionIndex());
     sectionListWidget_->setupWidget(currentProject_);
+}
+
+void MainWindow::on_deleteSectionAction_triggered()
+{
+    if  (QMessageBox::warning(this, "Удалить", "Вы действительно хотите удалить участок?") == QMessageBox::No);
 }
 
 void MainWindow::on_calcSectionParamsAction_triggered()

@@ -5,9 +5,11 @@ INPUT(
 ./release\scriptconsolewidget.o
 ./release\propertyeditor.o
 ./release\sectionlistwidget.o
+./release\itemlistwidget.o
 ./release\moc_mainwindow.o
 ./release\moc_scriptengine.o
 ./release\moc_scriptconsolewidget.o
 ./release\moc_propertyeditor.o
 ./release\moc_sectionlistwidget.o
+./release\moc_itemlistwidget.o
 );
