@@ -23,6 +23,7 @@ signals:
 
 public slots:
     void on_propertyValueChanged(const QString& propertyName, const QString& value);
+    void itemClicked(QListWidgetItem* currentItem);
 
 private:
     QListWidget* list_;

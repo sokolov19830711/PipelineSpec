@@ -17,10 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
 //    mdiArea_ = new QMdiArea(centralWidget_);
 //    mdiArea_->setObjectName("mdiArea");
     itemListWidget_ = new ItemListWidget(this);
+
 //    textEdit_ = new QTextEdit(this);
-//    QFile* file = new QFile("test2.htm");
+//    QFile* file = new QFile("ВТ — тест.htm");
 //    file->open(QIODevice::ReadOnly | QIODevice::Text);
 //    textEdit_->setHtml(QString(file->readAll()));
+//    setCentralWidget(textEdit_);
 
     setCentralWidget(itemListWidget_);
 
@@ -224,6 +226,7 @@ void MainWindow::setCurrentSection(int index)
         currentProject_.setProperty("currentSectionIndex", index);
         sectionParamsWidget_->setupEditor(currentSection_);
         sectionParamsWidget_->refreshValues();
+        sectionListWidget_->setupWidget(currentProject_);
     }
 }
 
@@ -248,7 +251,6 @@ void MainWindow::on_openProjectAction_triggered()
         generalProjectDataWidget_->setupEditor(currentProject_);
         generalProjectDataWidget_->refreshValues();
         setCurrentSection(currentSectionIndex());
-        sectionListWidget_->setupWidget(currentProject_);
         sectionListWidget_->setCurrentRow(currentSectionIndex() + 1);
     }
 }
@@ -294,12 +296,15 @@ void MainWindow::on_newSectionAction_triggered()
 {
     currentProject_.property("addNewSection").callWithInstance(currentProject_);
     setCurrentSection(currentSectionIndex());
-    sectionListWidget_->setupWidget(currentProject_);
 }
 
 void MainWindow::on_deleteSectionAction_triggered()
 {
-    if  (QMessageBox::warning(this, "Удалить", "Вы действительно хотите удалить участок?") == QMessageBox::No);
+    if (QMessageBox::question(this, "Удаление выбранного участка", "Вы действительно хотите удалить участок?", "Удалить", "Отмена") == QMessageBox::NoButton)
+    {
+        currentProject_.property("deleteCurrentSection").callWithInstance(currentProject_);
+        setCurrentSection(currentSectionIndex());
+    }
 }
 
 void MainWindow::on_calcSectionParamsAction_triggered()
@@ -310,5 +315,9 @@ void MainWindow::on_calcSectionParamsAction_triggered()
 
 void MainWindow::on_sectionListWidget_currentSectionChanged(int sectionIndex)
 {
-    setCurrentSection(sectionIndex);
+    if (sectionIndex != -1)
+    {
+        setCurrentSection(sectionIndex);
+        qDebug() << sectionIndex;
+    }
 }

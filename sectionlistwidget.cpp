@@ -8,7 +8,7 @@ SectionListWidget::SectionListWidget(QWidget *parent) : QWidget(parent)
     layout_->addWidget(list_);
     setLayout(layout_);
 
-    connect(list_, &QListWidget::currentRowChanged, this, &SectionListWidget::currentSectionChanged);
+    connect(list_, &QListWidget::itemClicked, this, &SectionListWidget::itemClicked);
 }
 
 SectionListWidget::~SectionListWidget()
@@ -39,5 +39,10 @@ void SectionListWidget::refreshList()
 
 void SectionListWidget::setCurrentRow(int row)
 {
-    list_->setCurrentRow(row);
+    if (row != -1) list_->setCurrentRow(row);
+}
+
+void SectionListWidget::itemClicked(QListWidgetItem* currentItem)
+{
+    emit currentSectionChanged(list_->row(currentItem));
 }

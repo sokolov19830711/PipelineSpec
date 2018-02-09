@@ -17,6 +17,26 @@ function Project()
         }
         return names;
     }
+
+    this.deleteCurrentSection = function()
+    {
+        if (this.currentSectionIndex !== -1)
+        {
+            var currIndex = this.currentSectionIndex;
+            this.sectionList.splice(currIndex, 1);
+            if (currIndex === 0 && this.sectionList.length === 0)
+            {
+                this.currentSectionIndex = -1;
+            }
+
+            else if (currIndex === 0)
+            {
+                this.currentSectionIndex = 0;
+            }
+
+            else this.currentSectionIndex = currIndex - 1;
+        }
+    }
 }
 
 function EmptyProject()
