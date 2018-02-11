@@ -14,7 +14,7 @@ public:
     explicit SectionListWidget(QWidget *parent = nullptr);
     ~SectionListWidget();
 
-    void setupWidget(QJSValue& item);
+    void setupWidget(QJSValue& project);
     void refreshList();
     void setCurrentRow(int row);
 
@@ -28,7 +28,7 @@ public slots:
 private:
     QListWidget* list_;
     QVBoxLayout* layout_;
-    QJSValue item_;
+    QJSValue project_;
 };
 
 #endif // SECTIONLISTWIDGET_H

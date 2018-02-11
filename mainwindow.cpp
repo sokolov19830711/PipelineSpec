@@ -251,7 +251,7 @@ void MainWindow::on_openProjectAction_triggered()
         generalProjectDataWidget_->setupEditor(currentProject_);
         generalProjectDataWidget_->refreshValues();
         setCurrentSection(currentSectionIndex());
-        sectionListWidget_->setCurrentRow(currentSectionIndex() + 1);
+        sectionListWidget_->setupWidget(currentProject_);
     }
 }
 
@@ -318,6 +318,5 @@ void MainWindow::on_sectionListWidget_currentSectionChanged(int sectionIndex)
     if (sectionIndex != -1)
     {
         setCurrentSection(sectionIndex);
-        qDebug() << sectionIndex;
     }
 }

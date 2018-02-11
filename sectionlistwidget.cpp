@@ -1,5 +1,4 @@
 #include "sectionlistwidget.h"
-#include <QDebug>
 
 SectionListWidget::SectionListWidget(QWidget *parent) : QWidget(parent)
 {
@@ -16,9 +15,9 @@ SectionListWidget::~SectionListWidget()
 
 }
 
-void SectionListWidget::setupWidget(QJSValue &item)
+void SectionListWidget::setupWidget(QJSValue &project)
 {
-    item_ = item;
+    project_ = project;
     refreshList();
 }
 
@@ -29,11 +28,15 @@ void SectionListWidget::on_propertyValueChanged(const QString& propertyName, con
 
 void SectionListWidget::refreshList()
 {
-    QVariantList names = item_.property("sectionNamesList").callWithInstance(item_).toVariant().toList();
-    list_->clear();
-    for (auto & i : names)
+    if (project_.property("sectionList").property("length").toInt() > 0)
     {
-        list_->addItem(i.toString());
+        QVariantList names = project_.property("sectionNamesList").callWithInstance(project_).toVariant().toList();
+        list_->clear();
+        for (auto & i : names)
+        {
+            list_->addItem(i.toString());
+        }
+        list_->item(project_.property("currentSectionIndex").toInt())->setBackground(QBrush(QColor(160, 160, 160)));
     }
 }
 
