@@ -38,7 +38,7 @@ public slots:
 
     void on_calcSectionParamsAction_triggered();
 
-    void on_sectionListWidget_currentSectionChanged(int sectionIndex);
+    void sectionListWidget_currentSectionChanged(int sectionIndex);
 
 protected:
     void closeEvent(QCloseEvent* event);
