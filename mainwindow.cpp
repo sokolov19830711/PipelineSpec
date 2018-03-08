@@ -192,7 +192,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QMetaObject::connectSlotsByName(this);
     connect(sectionParamsWidget_, &PropertyEditor::propertyValueChanged, sectionListWidget_, &SectionListWidget::on_propertyValueChanged);
-    connect(sectionListWidget_, &SectionListWidget::currentSectionChanged, this, MainWindow::on_sectionListWidget_currentSectionChanged);
+    connect(sectionListWidget_, &SectionListWidget::currentSectionChanged, this, MainWindow::sectionListWidget_currentSectionChanged);
 
     QSettings settings("settings",  QSettings::IniFormat, this);
     restoreGeometry(settings.value("geometry").toByteArray());
@@ -313,7 +313,7 @@ void MainWindow::on_calcSectionParamsAction_triggered()
     sectionParamsWidget_->refreshValues();
 }
 
-void MainWindow::on_sectionListWidget_currentSectionChanged(int sectionIndex)
+void MainWindow::sectionListWidget_currentSectionChanged(int sectionIndex)
 {
     if (sectionIndex != -1)
     {
